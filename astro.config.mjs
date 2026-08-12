@@ -13,9 +13,13 @@ export default defineConfig({
 		port: 4321,
 	},
 
-	// TODO: replace with your real domain once you pick a host.
-	// Used for canonical URLs and Open Graph tags.
-	site: "https://rithvikgurajala.com",
+	// Used for canonical URLs and Open Graph tags. Vercel injects
+	// VERCEL_PROJECT_PRODUCTION_URL at build time and keeps it pointed at the
+	// production domain, so adding a custom domain later needs no code change.
+	// Falls back to the dev origin when building locally.
+	site: process.env.VERCEL_PROJECT_PRODUCTION_URL
+		? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+		: "http://localhost:4321",
 
 	vite: {
 		plugins: [tailwindcss()],
