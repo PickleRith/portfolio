@@ -1,0 +1,42 @@
+---
+interface Props {
+	height?: string;
+}
+
+const { height = "70px" } = Astro.props;
+---
+
+<div
+	id="line-container"
+	class="relative flex items-center justify-center p-0"
+	aria-hidden="true"
+>
+	<div id="line" class="h-full w-[1px] p-0"></div>
+</div>
+
+<style define:vars={{ height }}>
+	@keyframes lineFlow {
+		0% {
+			background-position: 0 50%;
+		}
+		100% {
+			background-position: 0 -100%;
+		}
+	}
+
+	#line-container {
+		height: var(--height);
+	}
+
+	#line {
+		background-image: linear-gradient(
+			to bottom,
+			#24303f 0%,
+			#60a5fa 5%,
+			#24303f 10%
+		);
+		background-size: 100% 200%;
+		animation: lineFlow 2.5s linear infinite;
+		margin: 0;
+	}
+</style>

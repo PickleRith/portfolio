@@ -1,0 +1,17 @@
+---
+interface Props {
+	title: string;
+	description: string;
+	thumbnail?: string;
+}
+
+const { title, description, thumbnail } = Astro.props;
+
+import Layout from "./Layout.astro";
+import NavBar from "@/components/global/NavBar.astro";
+---
+
+<Layout title={title} description={description} thumbnail={thumbnail}>
+	<NavBar />
+	<slot />
+</Layout>

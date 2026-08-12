@@ -1,0 +1,171 @@
+---
+import type { Project } from "@/data/profile";
+
+interface Props {
+	project: Project;
+	position?: "left" | "right";
+}
+
+const { project, position = "left" } = Astro.props;
+const {
+	title,
+	kind,
+	description,
+	tags,
+	href,
+	label = "View Project",
+	gradient,
+	glyph,
+} = project;
+
+const leftProject = position === "left";
+const [gradFrom, gradTo] = gradient;
+---
+
+<div
+	class="mb-16 flex h-fit w-full flex-col justify-center px-6 lg:px-16"
+	class:list={leftProject ? "lg:flex-row" : "lg:flex-row-reverse"}
+>
+	<!-- Visual panel -->
+	<div
+		class="image-container relative mb-6 flex aspect-video w-full [perspective:200px] lg:mb-0 lg:w-1/2"
+		class:list={leftProject ? "lg:mr-6 lg:ml-auto" : "lg:ml-6 lg:mr-auto"}
+	>
+		<!-- offset backing layer -->
+		<div
+			class="panel panel-back absolute top-1/2 left-1/2 aspect-video w-full rounded-xl border-2 border-solid border-[#24303f] opacity-40"
+			class:list={leftProject ? "left" : "right"}
+		>
+		</div>
+
+		<!-- front layer -->
+		<div
+			class="panel panel-front absolute top-1/2 left-1/2 flex aspect-video w-full flex-col items-center justify-center gap-3 rounded-xl border-2 border-solid border-[#24303f]"
+			class:list={leftProject ? "left" : "right"}
+		>
+			<div class="font-mono text-5xl font-bold text-white/85 md:text-6xl">
+				{glyph}
+			</div>
+			<div
+				class="text-muted-foreground px-6 text-center font-mono text-[0.7rem] tracking-wide uppercase"
+			>
+				{kind}
+			</div>
+		</div>
+
+		{
+			href && (
+				<div class="visit-div absolute top-1/2 left-1/2 aspect-video w-full [transform:translateX(-50%)_translateY(-50%)] rounded-xl border-2 border-solid border-[#334155] bg-black/60 opacity-0">
+					<a
+						href={href}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="text-accent border-accent hover:bg-accent absolute top-1/2 left-1/2 hidden [transform:translateX(-50%)_translateY(-50%)] rounded-xl border-2 bg-black px-5 py-3 font-bold transition-colors duration-300 hover:text-black lg:block"
+					>
+						{label}
+					</a>
+				</div>
+			)
+		}
+	</div>
+
+	<!-- Mobile / tablet link -->
+	{
+		href && (
+			<div class="mb-8 flex items-center justify-center lg:hidden">
+				<a
+					href={href}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="bg-accent rounded-full px-5 py-2.5 font-semibold text-black transition-colors duration-300 hover:bg-white"
+				>
+					{label}
+				</a>
+			</div>
+		)
+	}
+
+	<!-- Copy -->
+	<div
+		class="flex h-fit w-full flex-col items-center justify-center lg:w-1/2 lg:px-6"
+		class:list={leftProject ? "lg:items-start" : "lg:items-end"}
+	>
+		<h3
+			class="mb-3 text-center text-3xl font-bold"
+			class:list={leftProject ? "lg:text-left" : "lg:text-right"}
+		>
+			{title}
+		</h3>
+		<p
+			class="text-muted-foreground max-w-lg text-center leading-relaxed text-balance lg:max-w-none"
+			class:list={leftProject ? "lg:text-left" : "lg:text-right"}
+		>
+			{description}
+		</p>
+		<div
+			class="mt-5 flex w-full flex-row flex-wrap justify-center gap-2"
+			class:list={leftProject ? "lg:justify-start" : "lg:justify-end"}
+		>
+			{
+				tags.map((tag) => (
+					<span class="border-accent/30 bg-accent/10 text-accent w-fit rounded-full border px-3 py-1 font-mono text-xs">
+						{tag}
+					</span>
+				))
+			}
+		</div>
+	</div>
+</div>
+
+<style define:vars={{ gradFrom, gradTo }}>
+	.panel {
+		background: linear-gradient(135deg, var(--gradFrom), var(--gradTo));
+		transition: transform 0.5s ease-in-out;
+	}
+
+	.panel.left,
+	.panel.right {
+		transform: translate(-50%, -50%);
+	}
+
+	@media (min-width: 426px) {
+		.panel-back.left {
+			transform: translateX(calc(-50% + 25px)) translateY(calc(-50% + 5px))
+				translateZ(-50px) rotateY(5deg);
+		}
+
+		.panel-back.right {
+			transform: translateX(calc(-50% - 25px)) translateY(calc(-50% + 5px))
+				translateZ(-50px) rotateY(-5deg);
+		}
+
+		.panel-front.left {
+			transform: translateX(calc(-50% + 10px)) translateY(-50%)
+				translateZ(-50px) rotateY(5deg);
+		}
+
+		.panel-front.right {
+			transform: translateX(calc(-50% - 10px)) translateY(-50%)
+				translateZ(-50px) rotateY(-5deg);
+		}
+	}
+
+	@media (min-width: 1025px) {
+		.image-container:hover .panel {
+			transform: rotateY(0deg) rotateX(0deg) translateZ(0px)
+				translateX(-50%) translateY(-50%);
+		}
+
+		.image-container:hover .visit-div {
+			opacity: 1;
+			transition: opacity 0.3s ease-in-out;
+			transition-delay: 0.25s;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.panel {
+			transition: none;
+		}
+	}
+</style>

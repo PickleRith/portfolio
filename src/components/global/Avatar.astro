@@ -1,0 +1,28 @@
+---
+/**
+ * Profile photo, cropped square and masked to a circle by the caller's size.
+ * Source asset lives at public/images/avatar.webp (320x320, covers the 120px
+ * render at 2x). Swap that file to change the photo; no markup change needed.
+ */
+import { profile } from "@/data/profile";
+
+interface Props {
+	size?: number;
+	className?: string;
+	/** Eager-load the above-the-fold instance on the intro card. */
+	eager?: boolean;
+}
+
+const { size = 80, className = "", eager = false } = Astro.props;
+---
+
+<img
+	src="/images/avatar.webp"
+	alt={profile.name}
+	width={size}
+	height={size}
+	loading={eager ? "eager" : "lazy"}
+	decoding="async"
+	class={`border-accent/50 shrink-0 rounded-full border-2 object-cover ${className}`}
+	style={`width:${size}px;height:${size}px`}
+/>

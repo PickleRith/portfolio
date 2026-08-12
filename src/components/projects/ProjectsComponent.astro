@@ -1,0 +1,20 @@
+---
+import Project from "./Project.astro";
+import { projects } from "@/data/profile";
+---
+
+<!-- overflow-x-clip: the offset 3D panels can extend past the padding at tablet widths -->
+<div
+	class="flex h-fit w-full flex-col items-center overflow-x-clip [perspective:1000px]"
+>
+	<div class="w-full max-w-[1440px]">
+		{
+			projects.map((project, i) => (
+				<Project
+					project={project}
+					position={i % 2 === 0 ? "left" : "right"}
+				/>
+			))
+		}
+	</div>
+</div>

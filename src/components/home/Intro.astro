@@ -1,0 +1,76 @@
+---
+import Card from "../global/Card.astro";
+import Avatar from "../global/Avatar.astro";
+import Socials from "../socials/Socials.astro";
+import Greeting from "./Greeting.svelte";
+import { profile } from "@/data/profile";
+---
+
+<div class="w-[90%] md:w-[640px] lg:w-1/2">
+	<Card
+		shadowColor="rgba(37, 99, 235, 0.18)"
+		className="animate-fadeIn bg-gradient-to-br from-[#0f151d] to-[#161f2b]"
+	>
+		<div class="flex h-fit flex-col px-6 pt-10 pb-8 lg:px-10">
+			<div class="flex flex-row items-center gap-4">
+				<Avatar size={80} eager />
+				<div class="flex flex-col items-start justify-center">
+					<h1 id="name" class="animate-gradient text-2xl font-bold">
+						{profile.name}
+					</h1>
+					<p class="text-muted-foreground text-lg">{profile.title}</p>
+				</div>
+			</div>
+
+			<div
+				class="text-muted-foreground mt-5 flex flex-row flex-wrap items-center gap-x-2 gap-y-1 font-mono text-xs"
+			>
+				<svg
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="1.5"
+					class="h-4 w-4"
+					aria-hidden="true"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"></path>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
+					></path>
+				</svg>
+				<span>{profile.location}</span>
+				<span class="text-hairline">/</span>
+				<span>{profile.locationNote}</span>
+			</div>
+
+			<div class="mt-6 mb-3 text-2xl font-bold">
+				<Greeting client:load greeting={profile.greeting} />
+			</div>
+
+			<div
+				class="text-muted-foreground flex flex-col gap-3 text-left leading-relaxed"
+			>
+				{profile.bio.map((paragraph) => <p>{paragraph}</p>)}
+			</div>
+
+			<div class="mt-8 flex flex-row items-center justify-center">
+				<Socials />
+			</div>
+		</div>
+	</Card>
+</div>
+
+<style>
+	#name {
+		background: linear-gradient(90deg, #e2e8f0 0%, #60a5fa 55%, #7dd3fc 100%);
+		background-size: 200%;
+		background-clip: text;
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+</style>

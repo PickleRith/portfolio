@@ -1,0 +1,36 @@
+---
+type Props = {
+	href?: string;
+	shadowColor?: string;
+	className?: string;
+};
+
+const {
+	href,
+	shadowColor = "rgba(2, 8, 20, 0.6)",
+	className = "",
+} = Astro.props;
+
+const cardClass = `card border-hairline relative z-10 rounded-2xl border ${className}`;
+---
+
+{
+	href ? (
+		<a href={href} class="block">
+			<div class={cardClass}>
+				<slot />
+			</div>
+		</a>
+	) : (
+		<div class={cardClass}>
+			<slot />
+		</div>
+	)
+}
+
+<style define:vars={{ shadowColor }}>
+	.card {
+		box-shadow: 0 14px 40px -12px var(--shadowColor);
+		overflow: hidden;
+	}
+</style>

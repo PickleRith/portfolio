@@ -1,0 +1,57 @@
+---
+import Card from "../global/Card.astro";
+import { skills, skillsSummary, profile } from "@/data/profile";
+---
+
+<div class="flex h-fit flex-col items-center justify-center pt-20">
+	<h2 class="mb-8 text-center text-4xl font-bold md:text-5xl">Skills</h2>
+
+	<div
+		class="grid w-[90%] grid-cols-1 gap-5 md:w-[640px] lg:w-2/3 lg:grid-cols-3"
+	>
+		<Card
+			shadowColor="rgba(37, 99, 235, 0.14)"
+			className="view-fadeUp bg-gradient-to-br from-[#0f151d] to-[#161f2b] lg:col-span-2"
+		>
+			<div
+				class="flex h-full flex-col items-start justify-start gap-5 px-6 py-6"
+			>
+				{
+					skills.map((group) => (
+						<div>
+							<h3 class="text-accent mb-2 font-mono text-xs tracking-widest uppercase">
+								{group.label}
+							</h3>
+							<div class="flex flex-row flex-wrap items-center justify-start gap-x-2 gap-y-1.5">
+								{group.items.map((item) => (
+									<span class="border-hairline bg-surface text-muted-foreground rounded-md border px-2 py-0.5 text-sm">
+										{item}
+									</span>
+								))}
+							</div>
+						</div>
+					))
+				}
+			</div>
+		</Card>
+
+		<Card
+			shadowColor="rgba(37, 99, 235, 0.14)"
+			className="view-fadeUp bg-gradient-to-br from-[#161f2b] to-[#0f151d]"
+		>
+			<div class="flex h-full flex-col justify-between px-6 py-6">
+				<div class="text-muted-foreground mb-6 flex flex-col gap-3">
+					{skillsSummary.map((paragraph) => <p>{paragraph}</p>)}
+				</div>
+				<div class="text-center lg:text-left">
+					<a
+						href={`mailto:${profile.email}`}
+						class="bg-accent inline-block rounded-full px-5 py-2 font-semibold text-black transition-colors duration-150 hover:bg-white"
+					>
+						Request Resume
+					</a>
+				</div>
+			</div>
+		</Card>
+	</div>
+</div>

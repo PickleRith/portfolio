@@ -1,0 +1,70 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import Intro from "@/components/home/Intro.astro";
+import NetworkLine from "@/components/global/NetworkLine.astro";
+import Experience from "@/components/experience/ExperienceComponent.tsx";
+import Projects from "@/components/projects/ProjectsComponent.astro";
+import Cases from "@/components/cases/CasesComponent.astro";
+import Skills from "@/components/skills/SkillsComponent.astro";
+import Contact from "@/components/contact/ContactComponent.astro";
+import Footer from "@/components/global/FooterComponent.astro";
+import { profile, experience, education } from "@/data/profile";
+---
+
+<PageLayout
+	title={`${profile.name} | ${profile.title}`}
+	description={`${profile.name} is a ${profile.title} based in ${profile.location}, turning ambiguous business problems into production ready AI, data, API, and full stack applications. See experience, projects, case competitions, and skills.`}
+>
+	<main>
+		<section id="home" class="flex items-center justify-center pt-32">
+			<Intro />
+		</section>
+
+		<NetworkLine height="70px" />
+
+		<section
+			id="experience"
+			class="flex scroll-mt-24 flex-col items-center justify-center"
+		>
+			<hr class="border-hairline mx-auto mb-10 h-px w-1/3 border-t" />
+			<Experience client:load experience={experience} education={education} />
+		</section>
+
+		<section id="projects" class="scroll-mt-12">
+			<div class="flex flex-col items-center justify-center pt-24">
+				<h2 class="mb-12 text-center text-4xl font-bold md:text-5xl">
+					Projects
+				</h2>
+				<Projects />
+			</div>
+		</section>
+
+		<section id="cases" class="scroll-mt-16">
+			<div class="flex flex-col items-center justify-center pt-24">
+				<h2 class="mb-3 text-center text-4xl font-bold md:text-5xl">
+					Case Competitions
+				</h2>
+				<p
+					class="text-muted-foreground mb-12 max-w-2xl px-6 text-center text-sm"
+				>
+					Strategy and analytics cases I worked on with teams, from
+					graduate competitions and Kelley coursework.
+				</p>
+				<Cases />
+			</div>
+		</section>
+
+		<section id="skills" class="scroll-mt-16">
+			<Skills />
+		</section>
+
+		<section id="contact" class="scroll-mt-24 pt-24">
+			<h2 class="mb-10 text-center text-4xl font-bold md:text-5xl">
+				Contact
+			</h2>
+			<Contact />
+		</section>
+	</main>
+
+	<Footer />
+</PageLayout>

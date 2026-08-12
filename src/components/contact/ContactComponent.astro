@@ -1,0 +1,56 @@
+---
+import Card from "../global/Card.astro";
+import Avatar from "../global/Avatar.astro";
+import Socials from "../socials/Socials.astro";
+import { profile } from "@/data/profile";
+---
+
+<div class="relative flex w-full items-center justify-center">
+	<div class="w-[90%] md:w-[640px] lg:w-2/3">
+		<Card
+			shadowColor="rgba(37, 99, 235, 0.18)"
+			className="view-fadeUp bg-gradient-to-br from-[#0f151d] via-[#1a2432] to-[#0f151d]"
+		>
+			<div
+				class="flex flex-col items-center justify-center gap-3 px-6 py-12"
+			>
+				<Avatar size={120} className="mb-2" />
+
+				<div class="text-center">
+					<h2 class="mb-1 text-3xl font-bold">{profile.name}</h2>
+					<p class="text-muted-foreground text-lg">
+						{profile.tagline}
+					</p>
+				</div>
+
+				<div
+					class="mt-6 flex flex-col items-center justify-center gap-5 md:flex-row md:items-stretch"
+				>
+					<div
+						class="flex flex-col justify-center text-center md:text-left"
+					>
+						<span class="text-muted-foreground font-mono text-xs">
+							EMAIL ME AT
+						</span>
+						<a
+							href={`mailto:${profile.email}`}
+							class="hover:text-accent transition-colors"
+						>
+							{profile.email}
+						</a>
+					</div>
+
+					<div
+						class="bg-hairline h-px w-full md:h-auto md:w-px"
+						aria-hidden="true"
+					>
+					</div>
+
+					<div class="flex flex-row items-center justify-center">
+						<Socials />
+					</div>
+				</div>
+			</div>
+		</Card>
+	</div>
+</div>

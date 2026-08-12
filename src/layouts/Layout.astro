@@ -1,0 +1,136 @@
+---
+interface Props {
+	title: string;
+	description: string;
+	thumbnail?: string;
+}
+
+const { title, description, thumbnail } = Astro.props;
+
+import "../styles/global.css";
+import "@fontsource-variable/inter";
+import "@fontsource-variable/jetbrains-mono";
+import { ClientRouter } from "astro:transitions";
+import { profile } from "@/data/profile";
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content={description} />
+		<meta name="author" content={profile.name} />
+		<meta
+			name="keywords"
+			content="Rithvik Gurajala, forward deployed engineer, data engineer, AI engineer, RAG, Python, SQL, Atlanta"
+		/>
+		<meta name="theme-color" content="#0b0f14" />
+		<link rel="canonical" href={canonical} />
+
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta name="twitter:card" content="summary_large_image" />
+		{thumbnail && <meta name="twitter:image" content={thumbnail} />}
+		{thumbnail && <meta property="og:image" content={thumbnail} />}
+
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="180x180"
+			href="/favicon-180.png"
+		/>
+		<link rel="apple-touch-icon" href="/favicon-180.png" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body>
+		<a
+			href="#home"
+			class="focus:bg-accent sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:px-4 focus:py-2 focus:text-black"
+		>
+			Skip to content
+		</a>
+		<slot />
+		<ClientRouter />
+	</body>
+</html>
+
+<style is:global>
+	html {
+		scroll-behavior: smooth;
+	}
+
+	body {
+		font-family:
+			"Inter Variable",
+			system-ui,
+			-apple-system,
+			sans-serif;
+		color: var(--color-primary);
+		background:
+			radial-gradient(circle, #1e293b 1px, transparent 1px), #0b0f14;
+		background-size: 22px 22px;
+		background-attachment: fixed;
+	}
+
+	/*
+	 * Skyline backdrop, layered over the dotted grid at low opacity so both
+	 * remain visible. A fixed pseudo-element rather than `background-attachment:
+	 * fixed`, which stutters badly on mobile Safari.
+	 * Photo: Tom Ritson via Unsplash.
+	 */
+	body::before {
+		content: "";
+		position: fixed;
+		inset: 0;
+		z-index: -1;
+		/*
+		 * Graded veil rather than a flat opacity: the photo's sunset band sits
+		 * at the top of the viewport, where it would drop muted body text below
+		 * a 4.5:1 contrast ratio. Darker up top, lighter over the city so the
+		 * image still reads.
+		 */
+		background:
+			linear-gradient(
+				180deg,
+				rgba(11, 15, 20, 0.7) 0%,
+				rgba(11, 15, 20, 0.58) 28%,
+				rgba(11, 15, 20, 0.52) 60%,
+				rgba(11, 15, 20, 0.58) 100%
+			),
+			url("/images/nyc-skyline.webp") center center / cover no-repeat;
+		pointer-events: none;
+	}
+
+	code,
+	.font-mono {
+		font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+	}
+
+	::selection {
+		background: var(--color-accent);
+		color: #0b0f14;
+	}
+</style>
+
+<script is:inline>
+	document.addEventListener("astro:page-load", () => {
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach((entry) => {
+				if (entry.isIntersecting) {
+					entry.target.classList.add("view-appear");
+				}
+			});
+		});
+
+		document
+			.querySelectorAll(".view-fadeUp")
+			.forEach((el) => observer.observe(el));
+	});
+</script>

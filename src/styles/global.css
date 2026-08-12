@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+@theme {
+	/* Muted slate + steel blue palette */
+	--color-primary: #e2e8f0;
+	--color-secondary: #131a24;
+	--color-surface: #0f151d;
+	--color-accent: #60a5fa;
+	--color-accent-2: #7dd3fc;
+	--color-muted-foreground: #94a3b8;
+	--color-hairline: #24303f;
+
+	--animate-fadeIn: fadeIn 0.5s ease-in-out;
+	--animate-fadeUp: fadeUp 0.5s ease-in-out;
+	--animate-gradient: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 100%;
+	}
+}
+
+@keyframes fadeUp {
+	0% {
+		opacity: 0;
+		translate: 0px 10px;
+	}
+	100% {
+		opacity: 100%;
+		translate: 0px 0px;
+	}
+}
+
+/* Scroll-triggered reveal, wired up by the observer in Layout.astro */
+.view-fadeUp {
+	translate: 0px 30px;
+	opacity: 0;
+	transition: all 0.5s ease;
+}
+
+.view-appear {
+	translate: 0px 0px;
+	opacity: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.view-fadeUp {
+		translate: 0px 0px;
+		opacity: 100%;
+		transition: none;
+	}
+
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
