@@ -27,7 +27,7 @@ export const profile = {
 export const socials = [
 	{
 		label: "LinkedIn",
-		href: "https://linkedin.com/in/rithvikgurajala",
+		href: "https://www.linkedin.com/in/rithvik-gurajala/",
 		icon: "linkedin",
 	},
 	{
