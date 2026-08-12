@@ -98,7 +98,4 @@ src/
 
 MIT — see [LICENSE](./LICENSE).
 
-Portions of the component structure and styling are derived from
-[liyunze-coding/RythonDev](https://github.com/liyunze-coding/RythonDev), which is
-MIT licensed. That copyright notice is retained in `LICENSE` as the license
-requires.
+
