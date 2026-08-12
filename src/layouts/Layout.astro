@@ -38,14 +38,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 		{thumbnail && <meta name="twitter:image" content={thumbnail} />}
 		{thumbnail && <meta property="og:image" content={thumbnail} />}
 
-		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
-		<link
-			rel="icon"
-			type="image/png"
-			sizes="180x180"
-			href="/favicon-180.png"
-		/>
-		<link rel="apple-touch-icon" href="/favicon-180.png" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>
