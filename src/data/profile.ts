@@ -59,7 +59,7 @@ export type Position = {
 
 export const experience: Position[] = [
 	{
-		title: "Technical Implementations Analyst",
+		title: "Data Analyst",
 		institution: "Contract",
 		dateRange: "Jan 2026 to Present",
 		location: "United States",
@@ -71,7 +71,7 @@ export const experience: Position[] = [
 		],
 	},
 	{
-		title: "Forward Deployed Engineer",
+		title: "Technology Consultant",
 		institution: "Indiana University Bloomington",
 		dateRange: "Dec 2024 to Dec 2025",
 		location: "Bloomington, IN",
