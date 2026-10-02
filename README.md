@@ -1,6 +1,6 @@
 <div align="center">
 	<h1>Rithvik Gurajala — Portfolio</h1>
-	<p>Personal portfolio site for a Forward Deployed Engineer.</p>
+	<p>Personal portfolio site.</p>
 </div>
 
 <div align="center">
@@ -49,11 +49,12 @@ It exports:
 
 Components read from this file, so a content change never requires touching markup.
 
-### Adding a profile photo
+### Changing the profile photo
 
-The site currently renders an `RG` monogram. To use a real photo, drop it at
-`src/assets/profile.jpg` and follow the instructions in the comment at the top of
-[`src/components/global/Avatar.astro`](src/components/global/Avatar.astro).
+The avatar is a single asset at `public/images/avatar.webp`, square and 320px so
+it stays sharp at the 120px render. Replace that file to change the photo; no
+markup change is needed. Crop it centred on the face, since the avatar is masked
+to a circle and the corners are clipped.
 
 ### Changing the color palette
 
@@ -89,10 +90,12 @@ src/
   currently installed on this machine. Astro 7 requires Node >= 22.12 — if you
   upgrade Node, you can bump `astro`, `@astrojs/react`, and `@astrojs/svelte` to
   their latest majors.
-- **Deployment.** Not configured yet. `npm run build` produces a fully static
-  `dist/` directory that any static host (Vercel, Netlify, GitHub Pages,
-  Cloudflare Pages) can serve. Update `site` in `astro.config.mjs` with the real
-  domain once chosen — it's used for canonical and Open Graph URLs.
+- **Deployment.** Hosted on Vercel via its GitHub integration, so every push to
+  `main` triggers a redeploy. `npm run build` produces a fully static `dist/`
+  directory, so any static host would work equally well.
+- **Canonical URLs.** `site` in `astro.config.mjs` reads
+  `VERCEL_PROJECT_PRODUCTION_URL` at build time and falls back to the dev origin
+  locally, so attaching a custom domain needs no code change.
 
 ## License
 

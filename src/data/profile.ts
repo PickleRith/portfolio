@@ -5,7 +5,7 @@
 
 export const profile = {
 	name: "Rithvik Gurajala",
-	title: "Forward Deployed Engineer",
+	title: "Technology Consultant",
 	location: "Atlanta, GA",
 	locationNote: "Open to relocation",
 	email: "rithvikgurajala@gmail.com",
