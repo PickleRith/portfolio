@@ -59,7 +59,12 @@ export function sameOrigin(request: Request) {
 	const origin = request.headers.get("origin");
 	if (!origin) return false;
 	try {
-		return new URL(origin).origin === new URL(request.url).origin;
+		const supplied = new URL(origin).origin;
+		const accepted = [new URL(request.url).origin];
+		if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+			accepted.push(`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`);
+		}
+		return accepted.includes(supplied);
 	} catch {
 		return false;
 	}

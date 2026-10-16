@@ -10,6 +10,18 @@ import vercel from "@astrojs/vercel";
 export default defineConfig({
 	integrations: [svelte({ extensions: [".svelte"] }), react()],
 	adapter: vercel(),
+	// Trust Vercel's forwarded host only for this project's exact domains.
+	// This lets Astro's built-in Origin check work behind Vercel's proxy.
+	security: {
+		allowedDomains: [
+			...new Set(
+				[
+					process.env.VERCEL_PROJECT_PRODUCTION_URL,
+					process.env.VERCEL_URL,
+				].filter(Boolean),
+			),
+		].map((hostname) => ({ hostname, protocol: "https" })),
+	},
 
 	server: {
 		port: 4321,
