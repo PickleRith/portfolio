@@ -127,3 +127,104 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 			.forEach((el) => observer.observe(el));
 	});
 </script>
+
+<script is:inline>
+	if (!window.__portfolioTimerReady) {
+		window.__portfolioTimerReady = true;
+		const tokenKey = "portfolio-visit-token-v2";
+		const timeKey = "portfolio-visible-ms-v2";
+		let token;
+		let elapsed = 0;
+		let startedAt = null;
+		let creating = false;
+		let created = false;
+		try {
+			token = sessionStorage.getItem(tokenKey);
+			elapsed = Math.min(
+				Number(sessionStorage.getItem(timeKey)) || 0,
+				86_400_000,
+			);
+		} catch {}
+		if (!token) token = crypto.randomUUID();
+
+		const onPortfolio = () => !location.pathname.startsWith("/admin");
+		const saveTime = () => {
+			try {
+				sessionStorage.setItem(timeKey, String(elapsed));
+			} catch {}
+		};
+		const settle = () => {
+			if (startedAt !== null) {
+				elapsed = Math.min(
+					86_400_000,
+					elapsed + Math.max(0, performance.now() - startedAt),
+				);
+				startedAt = performance.now();
+				saveTime();
+			}
+		};
+		const sendDuration = () => {
+			if (!created) return;
+			settle();
+			fetch("/api/visit-duration", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ token, visibleMs: Math.floor(elapsed) }),
+				credentials: "same-origin",
+				keepalive: true,
+			}).catch(() => {});
+		};
+		const begin = () => {
+			if (!onPortfolio() || creating) return;
+			if (document.visibilityState === "visible" && startedAt === null)
+				startedAt = performance.now();
+			if (created) return;
+			creating = true;
+			fetch(`/api/visit?page=${encodeURIComponent(location.pathname)}`, {
+				method: "POST",
+				headers: {
+					"X-Visit-Token": token,
+					"X-Entry-Referrer": document.referrer.slice(0, 500),
+				},
+				credentials: "same-origin",
+				keepalive: true,
+			})
+				.then((response) => {
+					if (response.ok) {
+						created = true;
+						try {
+							sessionStorage.setItem(tokenKey, token);
+						} catch {}
+						sendDuration();
+					}
+				})
+				.catch(() => {})
+				.finally(() => {
+					creating = false;
+				});
+		};
+		const sync = () => {
+			if (!onPortfolio() || document.visibilityState !== "visible") {
+				settle();
+				startedAt = null;
+				sendDuration();
+			} else {
+				begin();
+			}
+		};
+		document.addEventListener("astro:page-load", sync);
+		document.addEventListener("visibilitychange", sync);
+		window.addEventListener("pagehide", () => {
+			settle();
+			startedAt = null;
+			sendDuration();
+		});
+		setInterval(() => {
+			if (startedAt !== null) {
+				if (created) sendDuration();
+				else begin();
+			}
+		}, 15_000);
+		if (document.readyState === "complete") sync();
+	}
+</script>

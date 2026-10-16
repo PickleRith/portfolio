@@ -72,36 +72,3 @@ import { profile, experience, education } from "@/data/profile";
 
 	<Footer />
 </PageLayout>
-
-<script is:inline>
-	// One record per tab session, even if the page is refreshed or revisited.
-	let visitInProgress = false;
-	const recordPortfolioVisit = () => {
-		if (location.pathname !== "/" || visitInProgress) return;
-		try {
-			if (sessionStorage.getItem("portfolio-visit-recorded")) return;
-		} catch {
-			// Tracking still works when storage is disabled.
-		}
-		visitInProgress = true;
-		fetch("/api/visit?page=%2F", {
-			method: "POST",
-			credentials: "same-origin",
-			keepalive: true,
-			headers: { "X-Entry-Referrer": document.referrer.slice(0, 500) },
-		})
-			.then((response) => {
-				if (response.ok) {
-					try {
-						sessionStorage.setItem("portfolio-visit-recorded", "1");
-					} catch {}
-				}
-			})
-			.catch(() => {})
-			.finally(() => {
-				visitInProgress = false;
-			});
-	};
-	document.addEventListener("astro:page-load", recordPortfolioVisit);
-	if (document.readyState === "complete") recordPortfolioVisit();
-</script>

@@ -14,6 +14,7 @@ export type Visit = {
 	referrer_host: string | null;
 	browser: string;
 	device: string;
+	visible_ms: number | null;
 };
 
 function database() {
@@ -43,6 +44,9 @@ function ensureSchema() {
 				)
 			`;
 			await sql`CREATE INDEX IF NOT EXISTS portfolio_visits_visited_at_idx ON portfolio_visits (visited_at DESC)`;
+			await sql`ALTER TABLE portfolio_visits ADD COLUMN IF NOT EXISTS visit_token UUID`;
+			await sql`ALTER TABLE portfolio_visits ADD COLUMN IF NOT EXISTS visible_ms INTEGER`;
+			await sql`CREATE UNIQUE INDEX IF NOT EXISTS portfolio_visits_token_idx ON portfolio_visits (visit_token)`;
 		})();
 		schemaReady.catch(() => {
 			schemaReady = undefined;
@@ -126,19 +130,53 @@ export function visitFromRequest(request: Request) {
 }
 
 export async function recordVisit(request: Request) {
-	await ensureSchema();
 	const visit = visitFromRequest(request);
 	if (visit.device === "Bot") return;
+	const token = request.headers.get("x-visit-token");
+	if (
+		!token ||
+		!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+			token,
+		)
+	) {
+		throw new Error("Invalid visit token");
+	}
+	await ensureSchema();
 	const sql = database();
 	await sql`
 		INSERT INTO portfolio_visits
-			(ip_address, country, region, city, page_path, referrer_host, browser, device)
+			(visit_token, ip_address, country, region, city, page_path, referrer_host, browser, device, visible_ms)
 		VALUES
-			(${visit.ip}, ${visit.country}, ${visit.region}, ${visit.city}, ${visit.pagePath},
-			 ${visit.referrer}, ${visit.browser}, ${visit.device})
+			(${token}, ${visit.ip}, ${visit.country}, ${visit.region}, ${visit.city}, ${visit.pagePath},
+			 ${visit.referrer}, ${visit.browser}, ${visit.device}, 0)
+		ON CONFLICT (visit_token) DO NOTHING
 	`;
 	// Runs on each visit so records expire even if the admin never opens the dashboard.
 	await sql`DELETE FROM portfolio_visits WHERE visited_at < NOW() - INTERVAL '30 days'`;
+}
+
+export async function updateVisitDuration(token: string, visibleMs: number) {
+	if (
+		!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+			token,
+		)
+	) {
+		throw new Error("Invalid visit token");
+	}
+	if (
+		!Number.isSafeInteger(visibleMs) ||
+		visibleMs < 0 ||
+		visibleMs > 86_400_000
+	) {
+		throw new Error("Invalid visible time");
+	}
+	await ensureSchema();
+	const sql = database();
+	await sql`
+		UPDATE portfolio_visits
+		SET visible_ms = GREATEST(COALESCE(visible_ms, 0), ${visibleMs})
+		WHERE visit_token = ${token}
+	`;
 }
 
 export async function getDashboardData() {
@@ -158,7 +196,7 @@ export async function getDashboardData() {
 		`,
 		sql`
 			SELECT id, visited_at, ip_address, country, region, city, page_path,
-				referrer_host, browser, device
+				referrer_host, browser, device, visible_ms
 			FROM portfolio_visits ORDER BY visited_at DESC LIMIT 100
 		`,
 	]);

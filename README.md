@@ -23,12 +23,12 @@ npm run dev
 The dev server runs at http://localhost:4321. The visitor analytics endpoint
 needs the environment variables described below.
 
-| Command           | Action                                    |
-| ----------------- | ----------------------------------------- |
-| `npm run dev`     | Start the local dev server                |
-| `npm run build`   | Build the production site into `./dist/`  |
-| `npm run preview` | Preview the production build locally      |
-| `npm run format`  | Format all files with Prettier            |
+| Command           | Action                                   |
+| ----------------- | ---------------------------------------- |
+| `npm run dev`     | Start the local dev server               |
+| `npm run build`   | Build the production site into `./dist/` |
+| `npm run preview` | Preview the production build locally     |
+| `npm run format`  | Format all files with Prettier           |
 
 ## Editing your content
 
@@ -36,17 +36,17 @@ needs the environment variables described below.
 
 It exports:
 
-| Export          | What it controls                                              |
-| --------------- | ------------------------------------------------------------- |
-| `profile`       | Name, title, location, bio, email, tagline                     |
-| `socials`       | The social icon row (LinkedIn, email; GitHub is commented out) |
-| `navItems`      | Navigation bar links                                           |
-| `experience`    | The Experience tab entries                                     |
-| `education`     | The Education tab entries                                      |
-| `projects`      | Project cards, including their tags, links, and card colors    |
+| Export             | What it controls                                                       |
+| ------------------ | ---------------------------------------------------------------------- |
+| `profile`          | Name, title, location, bio, email, tagline                             |
+| `socials`          | The social icon row (LinkedIn, email; GitHub is commented out)         |
+| `navItems`         | Navigation bar links                                                   |
+| `experience`       | The Experience tab entries                                             |
+| `education`        | The Education tab entries                                              |
+| `projects`         | Project cards, including their tags, links, and card colors            |
 | `caseCompetitions` | Case competition cards (first entry renders as a full-width lead card) |
-| `skills`        | The grouped skill chips                                        |
-| `skillsSummary` | The paragraphs beside the skills grid                          |
+| `skills`           | The grouped skill chips                                                |
+| `skillsSummary`    | The paragraphs beside the skills grid                                  |
 
 Components read from this file, so a content change never requires touching markup.
 
@@ -100,7 +100,7 @@ src/
 
 ## Visitor analytics
 
-The home page sends one visit event per browser tab session to `/api/visit`.
+The site sends one visit event per browser tab session to `/api/visit`.
 On Vercel, the endpoint reads the public IP and approximate city, region, and
 country from Vercel's request headers. It also stores the visit time, page,
 browser and device category, and referring website hostname. It does not use
@@ -108,6 +108,11 @@ GPS, cookies for visitors, or a third party analytics script. Bots identified
 by user agent are skipped. Records are removed after 30 days when a new visit
 arrives or the admin page is opened. The footer links to the public privacy
 page explaining this collection.
+
+The browser also sends its accumulated visible-tab time every 15 seconds and
+when the tab is hidden or closed. Background time is excluded. The latest
+recorded duration appears in the admin table; it may be short if the browser
+closes before its final update reaches the server.
 
 The dashboard at `/admin` requires a password. Its session cookie is HTTP only,
 secure in production, and expires after 12 hours. The page is not indexed or
@@ -123,9 +128,9 @@ retained records.
    unique password of at least 16 characters, and `ADMIN_SESSION_SECRET`
    with at least 32 random characters. Generate a secret locally with:
 
-   ```bash
-   node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
-   ```
+    ```bash
+    node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
+    ```
 
 3. Redeploy after adding the variables. The database table and index are
    created on the first visit or dashboard request. Open `/admin` on your
@@ -139,5 +144,3 @@ the public portfolio still works and the admin page shows a setup message.
 ## License
 
 MIT — see [LICENSE](./LICENSE).
-
-

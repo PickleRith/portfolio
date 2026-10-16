@@ -32,6 +32,14 @@ function locationOf(visit: {
 		"Unknown"
 	);
 }
+
+function visibleTime(milliseconds: number | null) {
+	if (milliseconds === null) return "Not recorded";
+	const seconds = Math.floor(milliseconds / 1000);
+	if (seconds < 60) return `${seconds} sec`;
+	const minutes = Math.floor(seconds / 60);
+	return `${minutes} min ${seconds % 60} sec`;
+}
 ---
 
 <Layout
@@ -61,7 +69,8 @@ function locationOf(visit: {
 				<button
 					type="submit"
 					class="border-hairline hover:border-accent cursor-pointer rounded-lg border px-4 py-2 text-sm"
-					>Sign out</button>
+					>Sign out</button
+				>
 			</form>
 		</header>
 
@@ -136,12 +145,15 @@ function locationOf(visit: {
 							</>
 						</div>
 						<div class="overflow-x-auto">
-							<table class="w-full min-w-[880px] text-left text-sm">
+							<table class="w-full min-w-[980px] text-left text-sm">
 								<thead class="bg-secondary text-muted-foreground">
 									<tr>
 										<>
 											<th scope="col" class="px-5 py-3">
 												Time (ET)
+											</th>
+											<th scope="col" class="px-5 py-3">
+												Time on site
 											</th>
 											<th scope="col" class="px-5 py-3">
 												IP address
@@ -171,6 +183,9 @@ function locationOf(visit: {
 													timeZone:
 														"America/New_York",
 												})}
+											</td>
+											<td class="px-5 py-3 whitespace-nowrap">
+												{visibleTime(visit.visible_ms)}
 											</td>
 											<td class="px-5 py-3 font-mono text-xs">
 												{visit.ip_address || "Unknown"}
