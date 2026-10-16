@@ -1,0 +1,206 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { COOKIE_NAME, privateHeaders, validSession } from "@/lib/admin-auth";
+import { getDashboardData } from "@/lib/visitor-analytics";
+
+export const prerender = false;
+
+Astro.response.headers.set("Cache-Control", privateHeaders["Cache-Control"]);
+Astro.response.headers.set("X-Robots-Tag", privateHeaders["X-Robots-Tag"]);
+if (!validSession(Astro.cookies.get(COOKIE_NAME)?.value)) {
+	const response = Astro.redirect("/admin/login");
+	Object.entries(privateHeaders).forEach(([name, value]) =>
+		response.headers.set(name, value),
+	);
+	return response;
+}
+
+let data: Awaited<ReturnType<typeof getDashboardData>> | null = null;
+try {
+	data = await getDashboardData();
+} catch (error) {
+	console.error("Admin analytics read failed", error);
+}
+
+function locationOf(visit: {
+	city: string | null;
+	region: string | null;
+	country: string | null;
+}) {
+	return (
+		[visit.city, visit.region, visit.country].filter(Boolean).join(", ") ||
+		"Unknown"
+	);
+}
+---
+
+<Layout
+	title="Visitor analytics"
+	description="Private visitor analytics console"
+>
+	<main
+		id="main-content"
+		class="mx-auto min-h-screen w-full max-w-7xl px-5 py-10 md:px-10"
+	>
+		<header class="mb-10 flex flex-wrap items-center justify-between gap-5">
+			<div>
+				<a
+					href="/"
+					class="text-accent mb-5 inline-block text-sm hover:underline"
+					>Back to portfolio</a
+				>
+				<h1 class="text-3xl font-semibold md:text-4xl">
+					Visitor analytics
+				</h1>
+				<p class="text-muted-foreground mt-2 text-sm">
+					Records are kept for 30 days. Location is estimated from IP
+					address.
+				</p>
+			</div>
+			<form method="post" action="/admin/logout">
+				<button
+					type="submit"
+					class="border-hairline hover:border-accent cursor-pointer rounded-lg border px-4 py-2 text-sm"
+					>Sign out</button>
+			</form>
+		</header>
+
+		{
+			!data ? (
+				<section class="border-hairline bg-surface rounded-xl border p-6">
+					<h2 class="text-xl font-semibold">Analytics unavailable</h2>
+					<p class="text-muted-foreground mt-2">
+						Connect a Postgres database to the Vercel project and
+						set DATABASE_URL. The table is created automatically on
+						the first request.
+					</p>
+				</section>
+			) : (
+				<>
+					<section
+						class="mb-7 grid gap-4 sm:grid-cols-3"
+						aria-label="Visit totals"
+					>
+						{[
+							{
+								label: "Visits in 30 days",
+								value: data.counts.total,
+							},
+							{
+								label: "Visits in 7 days",
+								value: data.counts.week,
+							},
+							{
+								label: "Distinct IPs",
+								value: data.counts.unique_ips,
+							},
+						].map((stat) => (
+							<div class="border-hairline bg-surface rounded-xl border p-5">
+								<p class="text-muted-foreground text-sm">
+									{stat.label}
+								</p>
+								<p class="text-accent mt-2 text-3xl font-semibold">
+									{stat.value}
+								</p>
+							</div>
+						))}
+					</section>
+					<section class="border-hairline bg-surface mb-7 rounded-xl border p-5">
+						<h2 class="mb-4 text-lg font-semibold">
+							Top countries
+						</h2>
+						{data.countries.length === 0 ? (
+							<p class="text-muted-foreground text-sm">
+								No visits yet.
+							</p>
+						) : (
+							<ul class="flex flex-wrap gap-3">
+								{data.countries.map((item) => (
+									<li class="border-hairline rounded-lg border px-3 py-2 text-sm">
+										{item.country}:{" "}
+										<strong>{item.visits}</strong>
+									</li>
+								))}
+							</ul>
+						)}
+					</section>
+					<section class="border-hairline bg-surface overflow-hidden rounded-xl border">
+						<div class="flex flex-wrap items-baseline justify-between gap-2 px-5 py-4">
+							<>
+								<h2 class="text-lg font-semibold">
+									Recent visits
+								</h2>
+								<p class="text-muted-foreground text-xs">
+									Latest 100 records, newest first
+								</p>
+							</>
+						</div>
+						<div class="overflow-x-auto">
+							<table class="w-full min-w-[880px] text-left text-sm">
+								<thead class="bg-secondary text-muted-foreground">
+									<tr>
+										<>
+											<th scope="col" class="px-5 py-3">
+												Time (ET)
+											</th>
+											<th scope="col" class="px-5 py-3">
+												IP address
+											</th>
+											<th scope="col" class="px-5 py-3">
+												Location
+											</th>
+											<th scope="col" class="px-5 py-3">
+												Device / browser
+											</th>
+											<th scope="col" class="px-5 py-3">
+												Page
+											</th>
+											<th scope="col" class="px-5 py-3">
+												Referrer
+											</th>
+										</>
+									</tr>
+								</thead>
+								<tbody>
+									{data.visits.map((visit) => (
+										<tr class="border-hairline border-t align-top">
+											<td class="px-5 py-3 whitespace-nowrap">
+												{new Date(
+													visit.visited_at,
+												).toLocaleString("en-US", {
+													timeZone:
+														"America/New_York",
+												})}
+											</td>
+											<td class="px-5 py-3 font-mono text-xs">
+												{visit.ip_address || "Unknown"}
+											</td>
+											<td class="px-5 py-3">
+												{locationOf(visit)}
+											</td>
+											<td class="px-5 py-3">
+												{visit.device} / {visit.browser}
+											</td>
+											<td class="px-5 py-3">
+												{visit.page_path}
+											</td>
+											<td class="px-5 py-3">
+												{visit.referrer_host ||
+													"Direct"}
+											</td>
+										</tr>
+									))}
+								</tbody>
+							</table>
+						</div>
+						{data.visits.length === 0 && (
+							<p class="text-muted-foreground px-5 py-6 text-sm">
+								No visits recorded yet.
+							</p>
+						)}
+					</section>
+				</>
+			)
+		}
+	</main>
+</Layout>

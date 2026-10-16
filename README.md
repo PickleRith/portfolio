@@ -20,7 +20,8 @@ npm install
 npm run dev
 ```
 
-The dev server runs at http://localhost:4321.
+The dev server runs at http://localhost:4321. The visitor analytics endpoint
+needs the environment variables described below.
 
 | Command           | Action                                    |
 | ----------------- | ----------------------------------------- |
@@ -91,11 +92,49 @@ src/
   upgrade Node, you can bump `astro`, `@astrojs/react`, and `@astrojs/svelte` to
   their latest majors.
 - **Deployment.** Hosted on Vercel via its GitHub integration, so every push to
-  `main` triggers a redeploy. `npm run build` produces a fully static `dist/`
-  directory, so any static host would work equally well.
+  `main` triggers a redeploy. The portfolio pages stay static; the visit endpoint
+  and admin pages run as Vercel Functions.
 - **Canonical URLs.** `site` in `astro.config.mjs` reads
   `VERCEL_PROJECT_PRODUCTION_URL` at build time and falls back to the dev origin
   locally, so attaching a custom domain needs no code change.
+
+## Visitor analytics
+
+The home page sends one visit event per browser tab session to `/api/visit`.
+On Vercel, the endpoint reads the public IP and approximate city, region, and
+country from Vercel's request headers. It also stores the visit time, page,
+browser and device category, and referring website hostname. It does not use
+GPS, cookies for visitors, or a third party analytics script. Bots identified
+by user agent are skipped. Records are removed after 30 days when a new visit
+arrives or the admin page is opened. The footer links to the public privacy
+page explaining this collection.
+
+The dashboard at `/admin` requires a password. Its session cookie is HTTP only,
+secure in production, and expires after 12 hours. The page is not indexed or
+cached. Only the latest 100 visits appear in the table; counters cover the
+retained records.
+
+### Vercel setup
+
+1. In the Vercel project, open **Storage** and connect a **Neon Postgres**
+   database. Make sure its connection string is available as `DATABASE_URL`
+   in the project's Production environment.
+2. In **Settings → Environment Variables**, add `ADMIN_PASSWORD` with a
+   unique password of at least 16 characters, and `ADMIN_SESSION_SECRET`
+   with at least 32 random characters. Generate a secret locally with:
+
+   ```bash
+   node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
+   ```
+
+3. Redeploy after adding the variables. The database table and index are
+   created on the first visit or dashboard request. Open `/admin` on your
+   production URL to sign in. Never commit the secrets or the connection string.
+
+For local development, copy `.env.example` to `.env` and fill in your own
+values. Local requests have no Vercel geolocation headers, so city, region,
+country, and public IP will show as unknown. If `DATABASE_URL` is absent,
+the public portfolio still works and the admin page shows a setup message.
 
 ## License
 

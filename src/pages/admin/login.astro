@@ -1,0 +1,69 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { COOKIE_NAME, privateHeaders, validSession } from "@/lib/admin-auth";
+
+export const prerender = false;
+
+Astro.response.headers.set("Cache-Control", privateHeaders["Cache-Control"]);
+Astro.response.headers.set("X-Robots-Tag", privateHeaders["X-Robots-Tag"]);
+if (validSession(Astro.cookies.get(COOKIE_NAME)?.value)) {
+	const response = Astro.redirect("/admin");
+	Object.entries(privateHeaders).forEach(([name, value]) =>
+		response.headers.set(name, value),
+	);
+	return response;
+}
+const error = Astro.url.searchParams.has("error");
+---
+
+<Layout title="Admin sign in" description="Portfolio analytics sign in">
+	<main
+		id="main-content"
+		class="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-6 py-16"
+	>
+		<a href="/" class="text-accent mb-10 text-sm hover:underline"
+			>Back to portfolio</a
+		>
+		<div
+			class="border-hairline bg-surface rounded-2xl border p-7 shadow-2xl"
+		>
+			<h1 class="mb-2 text-3xl font-semibold">Admin sign in</h1>
+			<p class="text-muted-foreground mb-7 text-sm">
+				Visitor analytics for this portfolio.
+			</p>
+			{
+				error && (
+					<p
+						role="alert"
+						class="mb-5 rounded-lg border border-red-400/40 bg-red-950/40 p-3 text-sm text-red-200"
+					>
+						The password was incorrect or admin access is not
+						configured.
+					</p>
+				)
+			}
+			<form
+				method="post"
+				action="/admin/session"
+				class="flex flex-col gap-4"
+			>
+				<label for="password" class="text-sm font-medium"
+					>Password</label
+				>
+				<input
+					id="password"
+					name="password"
+					type="password"
+					autocomplete="current-password"
+					required
+					class="border-hairline bg-secondary focus:border-accent w-full rounded-lg border px-4 py-3 outline-none"
+				/>
+				<button
+					type="submit"
+					class="bg-accent cursor-pointer rounded-lg px-4 py-3 font-semibold text-slate-950 hover:bg-sky-300"
+					>Sign in</button
+				>
+			</form>
+		</div>
+	</main>
+</Layout>
