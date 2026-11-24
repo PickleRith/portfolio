@@ -145,6 +145,19 @@ export type Project = {
 
 export const projects: Project[] = [
 	{
+		title: "Kira Verbal",
+		kind: "Voice check-ins for learning",
+		description: `Built a prototype where students explain lesson concepts by speaking or typing.
+		Teachers can review each answer alongside the evidence for a suggested proficiency level
+		and make the final grading decision. The demo uses synthetic data.`,
+		tags: ["Voice AI", "Education", "Teacher Review", "Accessibility"],
+		href: "https://kira-verbal-web.onrender.com/",
+		label: "Visit Site",
+		gradient: ["#a78bfa", "#18213c"],
+		image: "/images/projects/kira-verbal.png",
+		imageAlt: "Kira Verbal landing page showing spoken check-ins and teacher review",
+	},
+	{
 		title: "Rapid Dispatch",
 		kind: "Voice AI dispatch platform",
 		description: `Built a voice AI platform for emergency plumbing calls on a live phone line.
