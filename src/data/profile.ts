@@ -11,12 +11,10 @@ export const profile = {
 	email: "rithvikgurajala@gmail.com",
 	/** Shown on the intro card. Each entry renders as its own paragraph. */
 	bio: [
-		`I'm a Forward Deployed Engineer focused on turning ambiguous business problems into reliable
-		technical solutions. I work across customers and engineering to translate requirements into
-		production ready AI, data, API, and full stack applications.`,
-		`I'm most interested in problems that need strong technical execution, fast iteration, and a
-		clear account of the tradeoffs. The goal is work that holds up technically and is genuinely
-		useful to the people using it.`,
+		`I build software and data products for people who need clear answers from complicated systems.
+		My work spans retail analytics, retrieval systems, APIs, and customer facing applications.`,
+		`I like working close to users, measuring whether a system improves their work, and fixing the
+		parts that do not.`,
 	],
 	/** Short line under the name in the contact card. */
 	tagline: "Data, AI & Automation Engineering",
@@ -64,34 +62,31 @@ export const experience: Position[] = [
 		dateRange: "Jan 2026 to Present",
 		location: "United States",
 		highlights: [
-			"Built and maintained SQL data workflows across multiple customer source systems using joins, CTEs, stored procedures, schema standardization, and reconciliation checks, improving reporting efficiency by 10%.",
-			"Mapped, cleaned, transformed, and validated inconsistent operational, financial, and compliance data using SQL and Tableau Prep before publishing reusable datasets for client stakeholders.",
-			"Partnered with client and internal teams to investigate discrepancies, translate operational requirements into reporting logic, and communicate findings to technical and business audiences.",
-			"Fulfilled ad hoc data requests and translated complex operational findings into clear dashboards and performance analyses.",
+			"Owned weekly point of sale and inventory feeds for a major retailer, mapped retailer items to supplier SKUs, checked each load, and delivered Tableau dashboards to suppliers.",
+			"Built data pipelines with Azure Data Factory, Snowflake, and dbt for more than 40 million rows across 8,000 stores. Store and item level anomaly checks flagged over 120 issues before client delivery.",
+			"Combined source systems into a reporting layer with SQL, CTEs, stored procedures, and reconciliation checks, improving reporting efficiency by 10%.",
 		],
 	},
 	{
-		title: "Technology Consultant",
+		title: "Graduate Software Engineer",
 		institution: "Indiana University Bloomington",
 		dateRange: "Dec 2024 to Dec 2025",
 		location: "Bloomington, IN",
 		highlights: [
-			"Built and deployed a full stack Digital Humans learning platform for 500+ students, integrating an NVIDIA Omniverse interface, the Eleven Labs voice API, and a multimodal RAG service using ChromaDB and Gemini.",
-			"Developed Python ingestion and retrieval pipelines for document cleaning, chunking, embeddings, metadata indexing, and content refresh.",
-			"Benchmarked latency, retrieval quality, groundedness, and engagement to guide system improvements.",
-			"Built Looker dashboards and automated KPI reporting so stakeholders could monitor adoption, investigate anomalies, and make product decisions grounded in the data.",
+			"Built a Digital Humans learning platform for more than 500 students using LangChain, NVIDIA Omniverse, ElevenLabs, ChromaDB, and Gemini.",
+			"Built Python ingestion and retrieval pipelines for more than 4,000 documents. On a 150 question benchmark, p95 retrieval time fell from 1.8 seconds to 640 milliseconds and grounded answers rose from 71% to 89%.",
+			"Turned stakeholder feedback into product requirements and prioritized improvements to ingestion, retrieval, performance, and the student experience.",
 		],
 	},
 	{
-		title: "Product Analytics Intern",
+		title: "Software Engineering Intern",
 		institution: "PricewaterhouseCoopers (PwC)",
 		dateRange: "Aug 2024 to Dec 2024",
 		location: "United States",
 		highlights: [
-			"Gathered requirements through 15+ stakeholder interviews and translated ambiguous business needs into structured product requirements, evaluation criteria, and reporting workflows.",
-			"Built a RAG based AI chatbot in Python, Flask, and LangChain, integrating the Claude API, REST endpoints, retrieval tuning, context management, and an evaluation harness scored against benchmarks. Estimated a 25% reduction in delays.",
-			"Presented architecture, tradeoffs, and workflow design to 200+ practitioners at PwC's Emerging Technologies Conference.",
-			"Helped write a white paper that supported an RFP submission to game studios.",
+			"Interviewed more than 15 stakeholders and turned their needs into product requirements, evaluation criteria, and reporting workflows.",
+			"Built a retrieval based chatbot with Python, Flask, LangChain, Claude, and REST APIs. Benchmark testing estimated a 25% reduction in delays.",
+			"Presented the architecture to more than 200 practitioners at PwC's Emerging Technologies Conference and coauthored a white paper for an RFP to AAA game studios.",
 		],
 	},
 	{
@@ -100,9 +95,10 @@ export const experience: Position[] = [
 		dateRange: "Sep 2022 to May 2023",
 		location: "India",
 		highlights: [
-			"Automated regression testing for Nokia's IoT platform using Selenium, validating workflows across a system supporting 1M+ connected devices and improving ticket resolution rates by 15%.",
-			"Built repeatable QA and defect analysis workflows in Jira, investigated production issues, and documented reproducible failures.",
-			"Partnered with client engineering teams to validate fixes in an Agile delivery model.",
+			"Built integrations for Facebook Graph, Google Content, and Google Ads APIs so campaign and account management could run through one service.",
+			"Added OAuth 2.0 sign up for storefronts such as Shopify and token based authentication between microservices.",
+			"Built an invoice service that checked campaign costs and billing plans, resolving 10% of pricing discrepancies automatically.",
+			"Shipped Fabric.js editor features for designing multiple ad creatives at once. Users created more than 23,000 creatives in two months.",
 		],
 	},
 ];
@@ -116,13 +112,15 @@ export const education: Position[] = [
 		summary: "GPA: 3.7 / 4.0",
 		highlights: [
 			"Relevant coursework: Big Data Analysis, Cloud Computing, IT Architecture, Software Product Development, ERP Systems, IT Governance/Risk/Controls, IT Audit.",
+			"Activities: AI and Data Analytics Club, case competitions, MSIS Student Ambassador, Buddy Program.",
 		],
 	},
 	{
-		title: "B.Tech, Electrical, Electronics and Communications Engineering",
+		title: "Bachelor of Technology, Electronics and Computer Science Engineering",
 		institution: "Jawaharlal Nehru Technological University, Hyderabad",
-		dateRange: "2018 to 2022",
+		dateRange: "Jul 2018 to Jul 2022",
 		location: "Hyderabad, India",
+		summary: "GPA: 3.72 / 4.0",
 		highlights: [
 			"Relevant coursework: Digital Logic Design, Digital Signal Processing, Data Structures and Algorithms, Python Programming, Statistics, Multivariate Calculus, Machine Learning, Big Data Analytics, Cloud Computing.",
 			"Activities and societies: Soccer team, Literature club, Newspaper editorial team, TEDx.",
@@ -147,13 +145,13 @@ export const projects: Project[] = [
 	{
 		title: "Rapid Dispatch",
 		kind: "Voice AI dispatch platform",
-		description: `The model talks to the caller. It doesn't decide anything. A separate rules engine
-		sets priority from P0 to P3, records the reason code behind every call it makes, and runs again
-		after each turn of the conversation. Public safety calls are blocked from scheduling at the API
-		layer rather than in the prompt.`,
+		description: `Built a voice AI platform for emergency plumbing calls on a live phone line.
+		It uses ElevenLabs Agents, Twilio, LiveKit, FastAPI, PostgreSQL, and Redis to assess urgency,
+		read safety steps, and book technicians from a schedule protected against conflicting updates.`,
 		tags: [
 			"ElevenLabs Agents",
 			"Twilio",
+			"LiveKit",
 			"FastAPI",
 			"PostgreSQL",
 			"Redis",
@@ -162,6 +160,18 @@ export const projects: Project[] = [
 		label: "Visit Site",
 		gradient: ["#1e3a5f", "#0f1b2d"],
 		glyph: "P0",
+	},
+	{
+		title: "BatteryVision",
+		kind: "Battery defect detection",
+		description: `Built a PyTorch pipeline using ResNet18 and U Net to find defects in battery
+		electrode coatings. Pinhole detection F1 rose from 0.63 with an OpenCV baseline to 0.88.
+		Sending 20% of images for human review caught 58% of model errors.`,
+		tags: ["PyTorch", "Computer Vision", "ResNet18", "U Net"],
+		href: "https://batteryvision.streamlit.app/",
+		label: "Visit Site",
+		gradient: ["#283b5c", "#101827"],
+		glyph: "BV",
 	},
 	{
 		title: "AR Automation Prototype",
@@ -259,12 +269,11 @@ export const caseCompetitions: CaseStudy[] = [
 		date: "Spring 2024",
 		challenge:
 			"Turn the Google Trends BigQuery dataset into dashboards that tell a business something it can act on.",
-		recommendation: `A Tableau dashboard built around a clickable US map, showing how terms rank in each
-		state, which ones gained ground over four weeks, and which swung hardest either way. On top of that,
-		an ARIMA_PLUS model in BigQuery forecasting the top three terms per state six months out.`,
-		metric: "80%",
-		metricLabel:
-			"of popular terms were Sports or Media and Entertainment (40.2% and 32.9%)",
+		recommendation: `Queried 300 million Google Trends rows in BigQuery and built Tableau dashboards
+		that showed regional demand patterns. The team identified a potential revenue opportunity for
+		small businesses and used ARIMA_PLUS to forecast leading search terms by state.`,
+		metric: "20%",
+		metricLabel: "projected revenue opportunity for small businesses",
 		tags: ["BigQuery SQL", "Tableau", "ARIMA_PLUS", "Time series"],
 	},
 	{
@@ -378,6 +387,7 @@ export const skills: SkillGroup[] = [
 			"ECS Fargate",
 			"Bedrock",
 			"BigQuery",
+			"Azure Data Factory",
 			"Azure DevOps",
 			"Docker",
 			"Git",
@@ -389,6 +399,7 @@ export const skills: SkillGroup[] = [
 		label: "Data & Databases",
 		items: [
 			"PostgreSQL",
+			"Snowflake",
 			"MySQL",
 			"MongoDB",
 			"ChromaDB",
@@ -403,8 +414,8 @@ export const skills: SkillGroup[] = [
 
 /** Rendered as the summary paragraph beside the skills grid. */
 export const skillsSummary = [
-	`Most of my work sits between a messy source system and someone who needs an answer out of it.
-	In practice that means pipelines, retrieval services, and the APIs and dashboards on top of them.`,
-	`I've shipped RAG systems on Gemini and Claude, voice agents on ElevenLabs and Twilio, and
-	analytics on BigQuery, DuckDB, and dbt.`,
+	`I have built pipelines for retail sales data, retrieval systems for large document sets,
+	and API services for advertising and billing.`,
+	`My recent work uses Snowflake, dbt, Tableau, LangChain, Gemini, Claude, and voice tools
+	to turn those systems into products people can use.`,
 ];
