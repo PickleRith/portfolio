@@ -137,8 +137,10 @@ export type Project = {
 	label?: string;
 	/** Two hex colors used to generate the card's visual panel. */
 	gradient: [string, string];
-	/** Short glyph or abbreviation rendered on the card panel. */
-	glyph: string;
+	/** Screenshot or rendered project output shown on the card panel. */
+	image: string;
+	imageAlt: string;
+	imageFit?: "cover" | "contain";
 };
 
 export const projects: Project[] = [
@@ -159,7 +161,8 @@ export const projects: Project[] = [
 		href: "https://homeguard-rapid-dispatch.vercel.app/",
 		label: "Visit Site",
 		gradient: ["#1e3a5f", "#0f1b2d"],
-		glyph: "P0",
+		image: "/images/projects/rapid-dispatch.png",
+		imageAlt: "Rapid Dispatch live site overview",
 	},
 	{
 		title: "BatteryVision",
@@ -171,7 +174,8 @@ export const projects: Project[] = [
 		href: "https://batteryvision.streamlit.app/",
 		label: "Visit Site",
 		gradient: ["#283b5c", "#101827"],
-		glyph: "BV",
+		image: "/images/projects/batteryvision.png",
+		imageAlt: "BatteryVision image inspection interface",
 	},
 	{
 		title: "AR Automation Prototype",
@@ -185,7 +189,8 @@ export const projects: Project[] = [
 		href: "https://github.com/PickleRith/ar-automation-prototype",
 		label: "View Repository",
 		gradient: ["#123a3a", "#08191a"],
-		glyph: "DSO",
+		image: "/images/projects/ar-automation.png",
+		imageAlt: "AR Flow dashboard showing receivables and aging",
 	},
 	{
 		title: "Song Recommendation Engine",
@@ -198,7 +203,9 @@ export const projects: Project[] = [
 		href: "https://github.com/PickleRith/travis-scott-song-analyzer",
 		label: "View Repository",
 		gradient: ["#3a2352", "#160f1f"],
-		glyph: "♪",
+		image: "/images/projects/song-recommendation.png",
+		imageAlt: "Song analysis chart showing topic prevalence across albums",
+		imageFit: "contain",
 	},
 	{
 		title: "Soccer Analytics Pipeline",
@@ -206,8 +213,12 @@ export const projects: Project[] = [
 		description: `Pulls in historical and live match events, moves them through Bronze, Silver, and
 		Gold layers, and puts the results behind a nine page Streamlit app.`,
 		tags: ["Python", "Polars", "DuckDB", "dbt", "Streamlit"],
+		href: "https://github.com/PickleRith/soccer-analytics-pipeline",
+		label: "View Repository",
 		gradient: ["#1f3d34", "#0e1a17"],
-		glyph: "⚽",
+		image: "/images/projects/soccer-analytics.png",
+		imageAlt:
+			"Soccer Analytics Pipeline architecture in the project README",
 	},
 	{
 		title: "DoorDash Cincinnati Analysis",
@@ -218,7 +229,8 @@ export const projects: Project[] = [
 		tags: ["Python", "Pandas", "Statistical Analysis"],
 		// TODO: add a public link (GitHub repo or write-up) if you want this clickable.
 		gradient: ["#4a2c1a", "#1c110a"],
-		glyph: "70%",
+		image: "/images/projects/doordash-analysis.png",
+		imageAlt: "DoorDash Cincinnati case study charts on delivery lateness",
 	},
 ];
 
